@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 const baseProjectSchema = {
     title: z.string().min(1, 'Title is required').max(100),
-    description: z.string().min(1, 'Description is required').max(4000),
-    goal: z.string().min(1, 'Goal is required').max(200),
+    description: z.string().min(1, 'Description is required').max(10000),
+    goal: z.string().min(1, 'Goal is required').max(4000),
     perfilRequired: z.string().min(1, 'Perfil required is mandatory').max(200),
     startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
         message: 'Invalid date format',
@@ -21,8 +21,8 @@ export const createProjectSchema = z.object({
 
 export const updateProjectSchema = z.object({
     title: z.string().min(1, 'Title is required').max(100).optional(),
-    description: z.string().min(1, 'Description is required').max(4000).optional(),
-    goal: z.string().min(1, 'Goal is required').max(200).optional(),
+    description: z.string().min(1, 'Description is required').max(10000).optional(),
+    goal: z.string().min(1, 'Goal is required').max(4000).optional(),
     perfilRequired: z.string().min(1, 'Perfil required is mandatory').max(200).optional(),
     startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
         message: 'Invalid date format',
