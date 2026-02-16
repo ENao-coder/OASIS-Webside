@@ -6,12 +6,15 @@
     <!-- Register Card -->
     <div class="register-container">
       <div class="register-card">
-        <h1 class="register-title">Register</h1>
-        <p class="register-subtitle">Create your admin account</p>
+        <h1 class="register-title">Registro</h1>
+        <p class="register-subtitle">Crear cuenta para administradores</p>
 
         <!-- Error Message -->
         <div v-if="error" class="error-message">
           {{ error }}
+        </div>
+        <div v-if="passwordAlert" class="error-message">
+          {{ passwordAlert }}
         </div>
 
         <!-- Success Message -->
@@ -46,7 +49,7 @@
               v-model="userData.username"
               type="text"
               class="form-input"
-              placeholder="Username (3-20 caracteres)"
+              placeholder="Nombre de usuario (3-20 caracteres)"
               minlength="3"
               maxlength="20"
               required
@@ -69,16 +72,12 @@
                 v-model="userData.password"
                 :type="showPassword ? 'text' : 'password'"
                 class="form-input"
-                placeholder="Password (8-32 caracteres)"
+                placeholder="Contraseña (8-32 caracteres)"
                 minlength="8"
                 maxlength="32"
                 required
               />
-              <button
-                type="button"
-                class="toggle-password"
-                @click="showPassword = !showPassword"
-              >
+              <button type="button" class="toggle-password" @click="showPassword = !showPassword">
                 {{ showPassword ? '👁️' : '👁️‍🗨️' }}
               </button>
             </div>
@@ -90,7 +89,7 @@
                 v-model="confirmPassword"
                 :type="showConfirmPassword ? 'text' : 'password'"
                 class="form-input"
-                placeholder="Confirm Password"
+                placeholder="Confirmar contraseña"
                 required
               />
               <button
@@ -106,24 +105,25 @@
           <div class="form-group">
             <select v-model="userData.role" class="form-input" required>
               <option value="" disabled>Seleccionar Rol</option>
-              <option value="President">President</option>
-              <option value="Vicepresident">Vicepresident</option>
-              <option value="Secretary">Secretary</option>
-              <option value="Treasurer">Treasurer</option>
-              <option value="Asesor">Asesor</option>
+              <option value="President">Presidente</option>
+              <option value="Vicepresident">Vicepresidente</option>
+              <option value="Secretary">Secretario/a</option>
+              <option value="Treasurer">Tesorero/a</option>
+              <option value="Asesor">Asesor/a</option>
               <option value="Vocal">Vocal</option>
-              <option value="Member">Member</option>
+              <option value="Member">Miembro del capitulo</option>
             </select>
           </div>
 
           <button type="submit" class="btn-register" :disabled="loading">
-            {{ loading ? 'Creating account...' : 'Register' }}
+            {{ loading ? 'Creando cuenta...' : 'Registrarse' }}
           </button>
         </form>
 
         <div class="register-footer">
           <p class="login-text">
-            Already have an account? <router-link to="/admin/login" class="link-login">Login</router-link>
+            ¿Ya tienes una cuenta?
+            <router-link to="/admin/login" class="link-login">Iniciar Sesión</router-link>
           </p>
         </div>
       </div>
@@ -144,14 +144,15 @@ export default {
         username: '',
         email: '',
         password: '',
-        role: ''
+        role: '',
       },
       confirmPassword: '',
       showPassword: false,
       showConfirmPassword: false,
       loading: false,
       error: null,
-      success: null
+      success: null,
+      passwordAlert: null,
     }
   },
   methods: {
@@ -159,25 +160,27 @@ export default {
       this.loading = true
       this.error = null
       this.success = null
+      this.passwordAlert = null
 
       // Validar que las contraseñas coincidan
       if (this.userData.password !== this.confirmPassword) {
         this.error = 'Las contraseñas no coinciden'
         this.loading = false
-      // Validar longitud mínima de contraseña
+        return
+      }
+
+      // Validar longitud mínima y máxima de contraseña
       if (this.userData.password.length < 8 || this.userData.password.length > 32) {
-        this.error = 'La contraseña debe tener entre 8 y 32 caracteres'
+        this.passwordAlert = 'La contraseña debe tener entre 8 y 32 caracteres'
         this.loading = false
         return
       }
 
       // Validar complejidad de contraseña
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/
       if (!passwordRegex.test(this.userData.password)) {
-        this.error = 'La contraseña debe contener mayúscula, minúscula, número y carácter especial'
-        this.loading = false
-        return
-      } this.error = 'La contraseña debe tener al menos 6 caracteres'
+        this.passwordAlert =
+          'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial'
         this.loading = false
         return
       }
@@ -196,8 +199,8 @@ export default {
       } finally {
         this.loading = false
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -229,7 +232,8 @@ export default {
 }
 
 @keyframes particleMove {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
   33% {

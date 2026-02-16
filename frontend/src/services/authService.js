@@ -4,10 +4,13 @@ import api from './api'
 export const login = async (credentials) => {
   try {
     const response = await api.post('/admins/login', credentials)
-    if (response.data.token) {
-      localStorage.setItem('auth_token', response.data.token)
+    // El token viene en response.data.result.token
+    const token = response.data?.result?.token
+    if (token) {
+      localStorage.setItem('auth_token', token)
     }
-    return response.data
+    // Devolver un objeto plano con token para el LoginView
+    return { token }
   } catch (error) {
     console.error('Error al iniciar sesión:', error)
     throw error

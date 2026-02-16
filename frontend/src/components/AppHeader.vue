@@ -1,7 +1,12 @@
 <template>
   <header class="site-header">
     <div class="left-section">
-      <button class="menu-btn" aria-label="Open Menu" @click="$emit('toggle-sidebar')" v-if="!isAdminRoute">
+      <button
+        class="menu-btn"
+        aria-label="Open Menu"
+        @click="$emit('toggle-sidebar')"
+        v-if="!isAdminRoute"
+      >
         <svg
           width="40"
           height="40"
@@ -42,6 +47,7 @@
 
     <div class="right-section" :class="{ 'admin-right-section': isAdminRoute }">
       <nav class="nav-links" v-if="!isAdminRoute">
+        <router-link to="/" class="nav-item">{{ $t('nav.home') }}</router-link>
         <router-link to="/galeria" class="nav-item">{{ $t('nav.gallery') }}</router-link>
         <router-link to="/proyectos" class="nav-item">{{ $t('nav.projects') }}</router-link>
         <router-link to="/eventos" class="nav-item">{{ $t('nav.events') }}</router-link>
@@ -67,7 +73,7 @@ export default {
   computed: {
     isAdminRoute() {
       return this.$route.path.startsWith('/admin')
-    }
+    },
   },
   methods: {
     handleCtaClick() {
@@ -75,8 +81,8 @@ export default {
         this.$router.push('/')
       }
       // Si no es admin route, no hace nada (puedes agregar lógica aquí)
-    }
-  }
+    },
+  },
 }
 </script>
 

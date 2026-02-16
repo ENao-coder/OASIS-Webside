@@ -4,7 +4,8 @@ import api from './api'
 export const getEvents = async () => {
   try {
     const response = await api.get('/events')
-    return response.data
+    // El backend devuelve { ok: true, events: [...] }
+    return response.data.events || response.data
   } catch (error) {
     console.error('Error al obtener eventos:', error)
     throw error
@@ -15,7 +16,8 @@ export const getEvents = async () => {
 export const getEventById = async (id) => {
   try {
     const response = await api.get(`/events/${id}`)
-    return response.data
+    // El backend devuelve { ok: true, event: {...} }
+    return response.data.event || response.data
   } catch (error) {
     console.error('Error al obtener evento:', error)
     throw error
@@ -26,7 +28,8 @@ export const getEventById = async (id) => {
 export const createEvent = async (eventData) => {
   try {
     const response = await api.post('/events', eventData)
-    return response.data
+    // El backend devuelve { ok: true, result: { ...evento } }
+    return response.data.result || response.data
   } catch (error) {
     console.error('Error al crear evento:', error)
     throw error

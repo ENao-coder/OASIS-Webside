@@ -4,7 +4,8 @@ import api from './api'
 export const getGalleryImages = async () => {
   try {
     const response = await api.get('/images')
-    return response.data
+    // El backend devuelve { ok: true, images: [...] }
+    return response.data.images || response.data
   } catch (error) {
     console.error('Error al obtener imágenes:', error)
     throw error
@@ -17,14 +18,14 @@ export const getImagesByCategory = async (category) => {
     const response = await api.get('/images')
     // Mapeo de categorías para compatibilidad
     const categoryMap = {
-      'exposicion': ['Conference', 'Popularization of Science'],
-      'viajes': ['Trips', 'Group Photos']
+      exposicion: ['Conference', 'Popularization of Science'],
+      viajes: ['Trips', 'Group Photos'],
     }
 
     // Filtrar por categoría
     const categories = categoryMap[category.toLowerCase()] || [category]
     const filteredImages = response.data.filter(
-      (img) => img.category && categories.includes(img.category)
+      (img) => img.category && categories.includes(img.category),
     )
     return filteredImages
   } catch (error) {
@@ -37,7 +38,8 @@ export const getImagesByCategory = async (category) => {
 export const getImageById = async (id) => {
   try {
     const response = await api.get(`/images/${id}`)
-    return response.data
+    // El backend devuelve { ok: true, image: {...} }
+    return response.data.image || response.data
   } catch (error) {
     console.error('Error al obtener imagen:', error)
     throw error
@@ -48,7 +50,8 @@ export const getImageById = async (id) => {
 export const createImage = async (imageData) => {
   try {
     const response = await api.post('/images', imageData)
-    return response.data
+    // El backend devuelve { ok: true, result: { ...imagen } }
+    return response.data.result || response.data
   } catch (error) {
     console.error('Error al crear imagen:', error)
     throw error

@@ -50,9 +50,63 @@ const router = createRouter({
       path: '/admin/dashboard',
       name: 'admin-dashboard',
       component: () => import('../views/admin/DashboardView.vue'),
-      meta: { requiresAuth: true }, // Will implement auth guard later
+      meta: { requiresAuth: true },
     },
   ],
+})
+
+//Navegación protegida para rutas de admin
+router.beforeEach(async (to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+
+  // Solo obtener el usuario si la ruta requiere autenticación
+  if (requiresAuth) {
+    const getCurrentUser = async () => {
+      try {
+        const token = localStorage.getItem('auth_token')
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+        const response = await fetch(`${apiUrl}/auth/session`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        })
+        if (response.ok) return await response.json() // Retorna el usuario
+        return null
+      } catch (error) {
+        console.error('Error al obtener el usuario:', error)
+        return null
+      }
+    }
+    const currentUser = await getCurrentUser()
+    if (!currentUser) {
+      next('/admin/login')
+    } else if (to.path === '/admin/login' || to.path === '/admin/register') {
+      next('/admin/dashboard')
+    } else {
+      next()
+    }
+  } else {
+    // Si el usuario ya está autenticado y trata de ir a login o register, redirigirlo al dashboard
+    if (to.path === '/admin/login' || to.path === '/admin/register') {
+      const getCurrentUser = async () => {
+        try {
+          const token = localStorage.getItem('auth_token')
+          const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+          const response = await fetch(`${apiUrl}/auth/session`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+          })
+          if (response.ok) return await response.json()
+          return null
+        } catch (error) {
+          return null
+        }
+      }
+      const currentUser = await getCurrentUser()
+      if (currentUser) {
+        next('/admin/dashboard')
+        return
+      }
+    }
+    next()
+  }
 })
 
 export default router

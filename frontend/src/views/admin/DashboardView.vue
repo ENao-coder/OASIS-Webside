@@ -41,9 +41,7 @@
         <div v-if="activeTab === 'projects'" class="content-panel">
           <div class="panel-header">
             <h2 class="panel-title">Gestión de Proyectos</h2>
-            <button class="btn-create" @click="openCreateModal('project')">
-              + Crear Proyecto
-            </button>
+            <button class="btn-create" @click="openCreateModal('project')">+ Crear Proyecto</button>
           </div>
 
           <!-- Projects Table -->
@@ -70,13 +68,15 @@
                       {{ project.status }}
                     </span>
                   </td>
-                  <td class="actions">
-                    <button class="btn-action edit" @click="editItem('project', project)">
-                      Editar
-                    </button>
-                    <button class="btn-action delete" @click="deleteItem('project', project.id)">
-                      Eliminar
-                    </button>
+                  <td>
+                    <div class="actions actions-align">
+                      <button class="btn-action edit" @click="editItem('project', project)">
+                        Editar
+                      </button>
+                      <button class="btn-action delete" @click="deleteItem('project', project.id)">
+                        Eliminar
+                      </button>
+                    </div>
                   </td>
                 </tr>
                 <tr v-if="projects.length === 0">
@@ -91,9 +91,7 @@
         <div v-if="activeTab === 'events'" class="content-panel">
           <div class="panel-header">
             <h2 class="panel-title">Gestión de Eventos</h2>
-            <button class="btn-create" @click="openCreateModal('event')">
-              + Crear Evento
-            </button>
+            <button class="btn-create" @click="openCreateModal('event')">+ Crear Evento</button>
           </div>
 
           <!-- Events Table -->
@@ -116,13 +114,15 @@
                   <td>{{ formatDate(event.startDate) }}</td>
                   <td>{{ formatDate(event.endDate) }}</td>
                   <td>{{ event.location }}</td>
-                  <td class="actions">
-                    <button class="btn-action edit" @click="editItem('event', event)">
-                      Editar
-                    </button>
-                    <button class="btn-action delete" @click="deleteItem('event', event.id)">
-                      Eliminar
-                    </button>
+                  <td>
+                    <div class="actions actions-align">
+                      <button class="btn-action edit" @click="editItem('event', event)">
+                        Editar
+                      </button>
+                      <button class="btn-action delete" @click="deleteItem('event', event.id)">
+                        Eliminar
+                      </button>
+                    </div>
                   </td>
                 </tr>
                 <tr v-if="events.length === 0">
@@ -137,9 +137,7 @@
         <div v-if="activeTab === 'images'" class="content-panel">
           <div class="panel-header">
             <h2 class="panel-title">Gestión de Imágenes</h2>
-            <button class="btn-create" @click="openCreateModal('image')">
-              + Subir Imagen
-            </button>
+            <button class="btn-create" @click="openCreateModal('image')">+ Subir Imagen</button>
           </div>
 
           <!-- Images Grid -->
@@ -151,18 +149,14 @@
                 <p class="image-category">{{ image.category }}</p>
                 <p class="image-date">{{ formatDate(image.date) }}</p>
               </div>
-              <div class="image-actions">
-                <button class="btn-action edit" @click="editItem('image', image)">
-                  Editar
-                </button>
+              <div class="image-actions actions-align">
+                <button class="btn-action edit" @click="editItem('image', image)">Editar</button>
                 <button class="btn-action delete" @click="deleteItem('image', image.id)">
                   Eliminar
                 </button>
               </div>
             </div>
-            <div v-if="images.length === 0" class="no-data">
-              No hay imágenes registradas
-            </div>
+            <div v-if="images.length === 0" class="no-data">No hay imágenes registradas</div>
           </div>
         </div>
       </div>
@@ -223,21 +217,12 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="project-start">Fecha Inicio *</label>
-                <input
-                  id="project-start"
-                  v-model="formData.startDate"
-                  type="date"
-                  required
-                />
+                <input id="project-start" v-model="formData.startDate" type="date" required />
               </div>
 
               <div class="form-group">
                 <label for="project-end">Fecha Fin</label>
-                <input
-                  id="project-end"
-                  v-model="formData.endDate"
-                  type="date"
-                />
+                <input id="project-end" v-model="formData.endDate" type="date" />
               </div>
             </div>
 
@@ -290,22 +275,12 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="event-start">Fecha Inicio *</label>
-                <input
-                  id="event-start"
-                  v-model="formData.startDate"
-                  type="date"
-                  required
-                />
+                <input id="event-start" v-model="formData.startDate" type="date" required />
               </div>
 
               <div class="form-group">
                 <label for="event-end">Fecha Fin *</label>
-                <input
-                  id="event-end"
-                  v-model="formData.endDate"
-                  type="date"
-                  required
-                />
+                <input id="event-end" v-model="formData.endDate" type="date" required />
               </div>
             </div>
 
@@ -400,11 +375,7 @@
 
               <div class="form-group">
                 <label for="image-date">Fecha</label>
-                <input
-                  id="image-date"
-                  v-model="formData.date"
-                  type="date"
-                />
+                <input id="image-date" v-model="formData.date" type="date" />
               </div>
             </div>
 
@@ -463,8 +434,8 @@ export default {
         url: '',
         category: 'Conference',
         date: '',
-        tagsString: ''
-      }
+        tagsString: '',
+      },
     }
   },
   computed: {
@@ -472,10 +443,10 @@ export default {
       const titles = {
         project: this.isEditMode ? 'Editar Proyecto' : 'Nuevo Proyecto',
         event: this.isEditMode ? 'Editar Evento' : 'Nuevo Evento',
-        image: this.isEditMode ? 'Editar Imagen' : 'Subir Imagen'
+        image: this.isEditMode ? 'Editar Imagen' : 'Subir Imagen',
       }
       return titles[this.currentType] || ''
-    }
+    },
   },
   async mounted() {
     await this.loadData()
@@ -524,13 +495,13 @@ export default {
       try {
         if (type === 'project') {
           await deleteProject(id)
-          this.projects = this.projects.filter(p => p.id !== id)
+          this.projects = this.projects.filter((p) => p.id !== id)
         } else if (type === 'event') {
           await deleteEvent(id)
-          this.events = this.events.filter(e => e.id !== id)
+          this.events = this.events.filter((e) => e.id !== id)
         } else if (type === 'image') {
           await deleteImage(id)
-          this.images = this.images.filter(i => i.id !== id)
+          this.images = this.images.filter((i) => i.id !== id)
         }
         alert('Elemento eliminado exitosamente')
       } catch (error) {
@@ -557,18 +528,18 @@ export default {
             startDate: this.formData.startDate,
             endDate: this.formData.endDate || null,
             status: this.formData.status,
-            image: this.formData.image || null
+            image: this.formData.image || null,
           }
 
           if (this.isEditMode) {
             await updateProject(this.currentItem.id, projectData)
-            const index = this.projects.findIndex(p => p.id === this.currentItem.id)
+            const index = this.projects.findIndex((p) => p.id === this.currentItem.id)
             if (index !== -1) {
               this.projects[index] = { ...this.currentItem, ...projectData }
             }
           } else {
-            const newProject = await createProject(projectData)
-            this.projects.push(newProject)
+            await createProject(projectData)
+            await this.loadData()
           }
         } else if (this.currentType === 'event') {
           const eventData = {
@@ -579,18 +550,15 @@ export default {
             location: this.formData.location,
             goal: this.formData.goal || null,
             perfilRequired: this.formData.perfilRequired || null,
-            image: this.formData.image || null
+            image: this.formData.image || null,
           }
 
           if (this.isEditMode) {
             await updateEvent(this.currentItem.id, eventData)
-            const index = this.events.findIndex(e => e.id === this.currentItem.id)
-            if (index !== -1) {
-              this.events[index] = { ...this.currentItem, ...eventData }
-            }
+            await this.loadData()
           } else {
-            const newEvent = await createEvent(eventData)
-            this.events.push(newEvent)
+            await createEvent(eventData)
+            await this.loadData()
           }
         } else if (this.currentType === 'image') {
           const imageData = {
@@ -600,19 +568,16 @@ export default {
             category: this.formData.category,
             date: this.formData.date || null,
             tags: this.formData.tagsString
-              ? this.formData.tagsString.split(',').map(tag => tag.trim())
-              : []
+              ? this.formData.tagsString.split(',').map((tag) => tag.trim())
+              : [],
           }
 
           if (this.isEditMode) {
             await updateImage(this.currentItem.id, imageData)
-            const index = this.images.findIndex(i => i.id === this.currentItem.id)
-            if (index !== -1) {
-              this.images[index] = { ...this.currentItem, ...imageData }
-            }
+            await this.loadData()
           } else {
-            const newImage = await createImage(imageData)
-            this.images.push(newImage)
+            await createImage(imageData)
+            await this.loadData()
           }
         }
 
@@ -638,7 +603,7 @@ export default {
         url: '',
         category: 'Conference',
         date: '',
-        tagsString: ''
+        tagsString: '',
       }
     },
     populateFormData(item) {
@@ -656,7 +621,7 @@ export default {
           url: '',
           category: 'Conference',
           date: '',
-          tagsString: ''
+          tagsString: '',
         }
       } else if (this.currentType === 'event') {
         this.formData = {
@@ -672,7 +637,7 @@ export default {
           url: '',
           category: 'Conference',
           date: '',
-          tagsString: ''
+          tagsString: '',
         }
       } else if (this.currentType === 'image') {
         this.formData = {
@@ -688,7 +653,7 @@ export default {
           endDate: '',
           location: '',
           status: 'Active',
-          image: ''
+          image: '',
         }
       }
     },
@@ -707,18 +672,18 @@ export default {
       return date.toLocaleDateString('es-ES', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric'
+        day: 'numeric',
       })
     },
     getStatusClass(status) {
       const statusMap = {
-        'Active': 'active',
-        'Completed': 'completed',
-        'On-hold': 'on-hold'
+        Active: 'active',
+        Completed: 'completed',
+        'On-hold': 'on-hold',
       }
       return statusMap[status] || 'active'
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -1006,7 +971,8 @@ export default {
   color: rgba(255, 255, 255, 0.5);
   font-size: 11px;
   margin: 0;
-}image-alt {
+}
+image-alt {
   color: #ffffff;
   font-weight: 600;
   margin: 0 0 8px 0;

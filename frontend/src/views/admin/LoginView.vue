@@ -6,8 +6,8 @@
     <!-- Login Card -->
     <div class="login-container">
       <div class="login-card">
-        <h1 class="login-title">Login</h1>
-        <p class="login-subtitle">Glad you're back !</p>
+        <h1 class="login-title">Iniciar Sesión</h1>
+        <p class="login-subtitle">OASIS UG</p>
 
         <!-- Error Message -->
         <div v-if="error" class="error-message">
@@ -21,7 +21,7 @@
               v-model="credentials.username"
               type="text"
               class="form-input"
-              placeholder="Username"
+              placeholder="Nombre de usuario"
               required
             />
           </div>
@@ -32,27 +32,24 @@
                 v-model="credentials.password"
                 :type="showPassword ? 'text' : 'password'"
                 class="form-input"
-                placeholder="Password"
+                placeholder="Contraseña"
                 required
               />
-              <button
-                type="button"
-                class="toggle-password"
-                @click="showPassword = !showPassword"
-              >
+              <button type="button" class="toggle-password" @click="showPassword = !showPassword">
                 {{ showPassword ? '👁️' : '👁️‍🗨️' }}
               </button>
             </div>
           </div>
 
           <button type="submit" class="btn-login" :disabled="loading">
-            {{ loading ? 'Loading...' : 'Login' }}
+            {{ loading ? 'Cargando...' : 'Iniciar Sesión' }}
           </button>
         </form>
 
         <div class="login-footer">
           <p class="signup-text">
-            Don't have an account ? <router-link to="/admin/register" class="link-signup">Signup</router-link>
+            ¿No tienes una cuenta?
+            <router-link to="/admin/register" class="link-signup">Registrarse</router-link>
           </p>
         </div>
       </div>
@@ -69,11 +66,11 @@ export default {
     return {
       credentials: {
         username: '',
-        password: ''
+        password: '',
       },
       showPassword: false,
       loading: false,
-      error: null
+      error: null,
     }
   },
   methods: {
@@ -83,17 +80,28 @@ export default {
 
       try {
         const response = await login(this.credentials)
-
+        // Si la respuesta no contiene token, mostrar error
+        if (!response || !response.token) {
+          this.error = 'No se pudo iniciar sesión. Intenta nuevamente.'
+          return
+        }
         // Redireccionar al dashboard después del login exitoso
         this.$router.push('/admin/dashboard')
       } catch (err) {
-        console.error('Error al iniciar sesión:', err)
-        this.error = err.response?.data?.message || 'Error al iniciar sesión. Verifica tus credenciales.'
+        let msg = 'Error al iniciar sesión. Verifica tus credenciales.'
+        if (err.response?.data?.message) {
+          msg = err.response.data.message
+        } else if (typeof err === 'string') {
+          msg = err
+        } else if (err.message) {
+          msg = err.message
+        }
+        this.error = msg
       } finally {
         this.loading = false
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -125,7 +133,8 @@ export default {
 }
 
 @keyframes particleMove {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
   33% {
